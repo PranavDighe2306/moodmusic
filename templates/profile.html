@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Profile - Efficient Antigravity</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div id="stars"></div>
+<div class="ambient"></div>
+
+<div class="profile-wrap">
+  <div class="profile-header">
+    <h1 class="main-title">Hello, {{ current_user.name }}</h1>
+    <p class="subtitle">Your saved mood history</p>
+    <a href="{{ url_for('logout') }}" class="surprise-btn" style="margin-top:20px; font-size:0.8rem; padding: 6px 16px;">Log Out</a>
+    <a href="{{ url_for('home') }}" class="back-btn" style="margin-top:20px; font-size:0.8rem; padding: 6px 16px;">Back Home</a>
+  </div>
+
+  <div class="tracker-section" style="margin-top: 30px;">
+    <div class="chart-wrap">
+      {% if history %}
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Detected Mood</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in history %}
+            <tr>
+              <td>{{ item.date.strftime('%Y-%m-%d %H:%M') }}</td>
+              <td style="text-transform: capitalize; color: #a78bfa; font-weight:bold;">{{ item.mood }}</td>
+              <td><a href="{{ url_for('mood', type=item.mood) }}" class="play-link">Play Vibe</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <p class="tracker-empty">You haven't tracked any moods yet. Go find your vibe!</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<style>
+.profile-wrap {
+  position: relative;
+  z-index: 10;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 60px 20px;
+}
+.profile-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text);
+}
+.history-table th, .history-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+}
+.history-table th {
+  color: var(--sub);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.history-table tr:hover {
+  background: rgba(255,255,255,0.02);
+}
+.play-link {
+  color: #fff;
+  background: rgba(167, 139, 250, 0.2);
+  padding: 4px 10px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: background 0.2s;
+}
+.play-link:hover {
+  background: rgba(167, 139, 250, 0.4);
+}
+</style>
+
+<script>
+const se=document.getElementById('stars');
+for(let i=0;i<60;i++){const s=document.createElement('div');s.className='star';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*5}s;--dl:${Math.random()*6}s;--op:${.1+Math.random()*.5}`;se.appendChild(s);}
+</script>
+</body>
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign in - Google Accounts</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --google-blue: #1a73e8;
+      --google-blue-hover: #1557b0;
+      --google-gray: #5f6368;
+      --google-light-gray: #dadce0;
+      --google-border: #e0e0e0;
+      --bg: #ffffff;
+      --text: #202124;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+      background-color: #f0f4f9;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    /* Card Layout */
+    .card {
+      background: var(--bg);
+      border: 1px solid var(--google-light-gray);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 450px;
+      padding: 40px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Google Logo */
+    .logo-container {
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .google-logo {
+      width: 75px;
+      height: 24px;
+    }
+
+    .title {
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.33;
+      text-align: center;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .subtitle {
+      font-size: 16px;
+      color: var(--google-gray);
+      text-align: center;
+      margin-bottom: 28px;
+      line-height: 1.4;
+    }
+
+    /* Accounts list */
+    .accounts-list {
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--google-border);
+    }
+
+    .account-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      border-top: 1px solid var(--google-border);
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .account-item:hover {
+      background-color: #f7f8f9;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #a78bfa, #818cf8);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 500;
+      font-size: 14px;
+      margin-right: 12px;
+    }
+
+    .avatar.guest {
+      background: linear-gradient(135deg, #10b981, #059669);
+    }
+
+    .avatar.custom {
+      background: var(--google-blue);
+    }
+
+    .account-details {
+      flex-grow: 1;
+    }
+
+    .account-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: #3c4043;
+    }
+
+    .account-email {
+      font-size: 12px;
+      color: var(--google-gray);
+    }
+
+    .use-another-btn {
+      display: flex;
+      align-items: center;
+      padding: 14px 0;
+      color: var(--google-blue);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      border-top: 1px solid var(--google-border);
+    }
+
+    .use-another-btn:hover {
+      color: var(--google-blue-hover);
+    }
+
+    .use-another-btn svg {
+      margin-right: 12px;
+      fill: currentColor;
+    }
+
+    /* Custom form */
+    .custom-form {
+      display: none;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Google Material Input Outlines */
+    .input-field {
+      position: relative;
+      margin-bottom: 24px;
+      width: 100%;
+    }
+
+    .input-field input {
+      width: 100%;
+      padding: 16px;
+      border: 1px solid var(--google-light-gray);
+      border-radius: 4px;
+      font-size: 16px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .input-field input:focus {
+      border-color: var(--google-blue);
+      border-width: 2px;
+      padding: 15px 16px; /* Ajust for border size change */
+    }
+
+    .input-field label {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      padding: 0 4px;
+      color: var(--google-gray);
+      transition: 0.2s ease all;
+      pointer-events: none;
+      font-size: 16px;
+    }
+
+    .input-field input:focus ~ label,
+    .input-field input:not(:placeholder-shown) ~ label {
+      top: 0;
+      font-size: 12px;
+      color: var(--google-blue);
+    }
+
+    /* Buttons block */
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 32px;
+    }
+
+    .back-btn {
+      color: var(--google-blue);
+      background: none;
+      border: none;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    .back-btn:hover {
+      background-color: rgba(26, 115, 232, 0.04);
+      color: var(--google-blue-hover);
+    }
+
+    .next-btn {
+      background-color: var(--google-blue);
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s, box-shadow 0.2s;
+    }
+
+    .next-btn:hover {
+      background-color: var(--google-blue-hover);
+      box-shadow: 0 1px 3px rgba(60,64,67,0.3), 0 4px 8px 3px rgba(60,64,67,0.15);
+    }
+
+    /* Spinner Screen */
+    .loader-screen {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: white;
+      z-index: 10;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .spinner {
+      position: relative;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid var(--google-blue);
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loader-text {
+      font-size: 15px;
+      color: var(--google-gray);
+      font-weight: 400;
+    }
+
+    /* Google footer */
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 450px;
+      margin-top: 20px;
+      padding: 0 10px;
+      font-size: 12px;
+      color: var(--google-gray);
+    }
+
+    .footer a {
+      color: var(--google-gray);
+      text-decoration: none;
+      margin-left: 16px;
+    }
+
+    .footer a:hover {
+      color: #202124;
+    }
+
+    .error-msg {
+      color: #d93025;
+      font-size: 12px;
+      margin-top: -16px;
+      margin-bottom: 16px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div>
+    <!-- Main Card -->
+    <div class="card" id="card">
+      
+      <!-- Material Loader overlay -->
+      <div class="loader-screen" id="loader">
+        <div class="spinner"></div>
+        <div class="loader-text" id="loaderText">One moment...</div>
+      </div>
+
+      <div class="logo-container">
+        <!-- SVG Google Logo -->
+        <svg viewBox="0 0 74 24" class="google-logo" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#EA4335" d="M12.24 10.285V14.4h6.887c-.648 2.41-2.519 4.114-6.887 4.114-4.907 0-8.905-4.013-8.905-8.986 0-4.973 3.998-8.986 8.905-8.986 2.683 0 4.606 1.018 5.753 2.112L21.1 2.06C19.063.298 15.932-.7 12.24-.7 5.257-.7-.3 4.966-.3 11.96s5.557 12.66 12.54 12.66c7.302 0 12.148-5.132 12.148-12.378 0-.796-.08-1.4-.24-1.957H12.24z"/>
+          <path fill="#4285F4" d="M38.835 15.35c-2.316 0-4.133-1.802-4.133-4.136 0-2.353 1.817-4.155 4.133-4.155 2.296 0 4.114 1.802 4.114 4.155 0 2.334-1.818 4.136-4.114 4.136zm0-11.836c-4.482 0-7.828 3.328-7.828 7.7 0 4.353 3.346 7.7 7.828 7.7 4.462 0 7.808-3.347 7.808-7.7 0-4.372-3.346-7.7-7.808-7.7z"/>
+          <path fill="#FBBC05" d="M55.835 15.35c-2.316 0-4.133-1.802-4.133-4.136 0-2.353 1.817-4.155 4.133-4.155 2.296 0 4.114 1.802 4.114 4.155 0 2.334-1.818 4.136-4.114 4.136zm0-11.836c-4.482 0-7.828 3.328-7.828 7.7 0 4.353 3.346 7.7 7.828 7.7 4.462 0 7.808-3.347 7.808-7.7 0-4.372-3.346-7.7-7.808-7.7z"/>
+          <path fill="#34A853" d="M71.21.564h-3.69v22.428h3.69V.564z"/>
+        </svg>
+      </div>
+
+      <h1 class="title" id="pageTitle">Choose an account</h1>
+      <p class="subtitle" id="pageSubtitle">to continue to Mood Music</p>
+
+      <!-- Account Selection View -->
+      <div id="accountsView">
+        <div class="accounts-list">
+          <div class="account-item" onclick="loginWithGoogle('demo.user@gmail.com', 'Demo User')">
+            <div class="avatar">D</div>
+            <div class="account-details">
+              <div class="account-name">Demo User</div>
+              <div class="account-email">demo.user@gmail.com</div>
+            </div>
+          </div>
+          <div class="account-item" onclick="loginWithGoogle('guest.music@gmail.com', 'Guest Listener')">
+            <div class="avatar guest">G</div>
+            <div class="account-details">
+              <div class="account-name">Guest Listener</div>
+              <div class="account-email">guest.music@gmail.com</div>
+            </div>
+          </div>
+        </div>
+        <div class="use-another-btn" onclick="showCustomForm()">
+          <svg width="20" height="20" viewBox="0 0 24 24">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+          </svg>
+          Use another account
+        </div>
+      </div>
+
+      <!-- Custom Email Entry View -->
+      <div id="customForm" class="custom-form">
+        <div class="input-field">
+          <input type="email" id="emailInput" placeholder=" " required autocomplete="email">
+          <label for="emailInput">Email or phone</label>
+        </div>
+        <div class="error-msg" id="errorMsg">Enter a valid email address</div>
+
+        <div class="input-field" style="margin-top: 10px;">
+          <input type="text" id="nameInput" placeholder=" " autocomplete="name">
+          <label for="nameInput">Your Name (optional)</label>
+        </div>
+
+        <div class="btn-group">
+          <button class="back-btn" onclick="showAccountsView()">Back</button>
+          <button class="next-btn" onclick="submitCustomEmail()">Next</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Extra Google Links Footer -->
+    <div class="footer">
+      <span>English (United States)</span>
+      <div>
+        <a href="#">Help</a>
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showCustomForm() {
+      document.getElementById('accountsView').style.display = 'none';
+      document.getElementById('customForm').style.display = 'block';
+      document.getElementById('pageTitle').textContent = 'Sign in';
+      document.getElementById('pageSubtitle').textContent = 'with your Google Account';
+      document.getElementById('emailInput').focus();
+    }
+
+    function showAccountsView() {
+      document.getElementById('customForm').style.display = 'none';
+      document.getElementById('accountsView').style.display = 'block';
+      document.getElementById('pageTitle').textContent = 'Choose an account';
+      document.getElementById('pageSubtitle').textContent = 'to continue to Mood Music';
+      document.getElementById('errorMsg').style.display = 'none';
+    }
+
+    function submitCustomEmail() {
+      const emailInput = document.getElementById('emailInput');
+      const nameInput = document.getElementById('nameInput');
+      const email = emailInput.value.trim();
+      const name = nameInput.value.trim();
+
+      // Simple regex verification
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        document.getElementById('errorMsg').style.display = 'block';
+        emailInput.focus();
+        return;
+      }
+
+      document.getElementById('errorMsg').style.display = 'none';
+      loginWithGoogle(email, name);
+    }
+
+    function loginWithGoogle(email, name) {
+      const loader = document.getElementById('loader');
+      const loaderText = document.getElementById('loaderText');
+      
+      loaderText.textContent = `Signing you in as ${email}...`;
+      loader.style.display = 'flex';
+
+      // Send post request to Flask callback
+      fetch('/auth/google/callback', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email, name: name })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Authentication failed');
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.success && data.redirect) {
+          loaderText.textContent = 'Verification successful! Redirecting...';
+          setTimeout(() => {
+            window.location.href = data.redirect;
+          }, 800);
+        } else {
+          throw new Error(data.error || 'Unknown response');
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        loader.style.display = 'none';
+        alert('An error occurred during Google Sign-in. Please try again.');
+      });
+    }
+  </script>
+</body>
+</html>

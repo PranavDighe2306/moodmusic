@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Login - Efficient Antigravity</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div id="stars"></div>
+<div class="ambient"></div>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+    <h1 class="main-title">Welcome Back</h1>
+    <p class="subtitle">Log in to sync your mood history</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('login') }}">
+      <div class="input-group">
+        <label>Email Address</label>
+        <input type="email" name="email" class="search-box" required placeholder="you@example.com">
+      </div>
+      <div class="input-group">
+        <label>Password</label>
+        <input type="password" name="password" class="search-box" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="surprise-btn auth-btn">Log In</button>
+    </form>
+
+    <div class="auth-divider">
+      <span>OR</span>
+    </div>
+
+    <a href="{{ url_for('auth_google') }}" class="google-btn">
+      <span class="icon">G</span> Continue with Google
+    </a>
+
+    <p class="auth-footer">Don't have an account? <a href="{{ url_for('signup') }}">Sign up</a></p>
+  </div>
+</div>
+
+<style>
+.auth-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  position: relative;
+  z-index: 10;
+}
+.auth-card {
+  background: rgba(19, 19, 31, 0.8);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 40px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+.input-group {
+  margin-bottom: 20px;
+}
+.input-group label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--sub);
+  margin-bottom: 8px;
+}
+.auth-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 12px;
+  font-size: 1rem;
+}
+.auth-divider {
+  text-align: center;
+  margin: 20px 0;
+  position: relative;
+}
+.auth-divider span {
+  background: #13131f;
+  padding: 0 10px;
+  color: var(--sub);
+  font-size: 0.8rem;
+  position: relative;
+  z-index: 1;
+}
+.auth-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border);
+}
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  background: #fff;
+  color: #000;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: transform 0.2s;
+}
+.google-btn:hover {
+  transform: scale(1.02);
+}
+.google-btn .icon {
+  font-weight: 800;
+  color: #ea4335;
+}
+.auth-footer {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 0.85rem;
+  color: var(--sub);
+}
+.auth-footer a {
+  color: #a78bfa;
+  text-decoration: none;
+}
+.flash {
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+.flash-danger { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.3); }
+.flash-success { background: rgba(34, 197, 94, 0.2); color: #86efac; border: 1px solid rgba(34, 197, 94, 0.3); }
+.flash-info { background: rgba(59, 130, 246, 0.2); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.3); }
+</style>
+
+<script>
+const se=document.getElementById('stars');
+for(let i=0;i<50;i++){const s=document.createElement('div');s.className='star';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*5}s;--dl:${Math.random()*6}s;--op:${.1+Math.random()*.5}`;se.appendChild(s);}
+</script>
+</body>
+</html>

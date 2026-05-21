@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mood Music 🎧</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="logo">Mood <span>Music</span></div>
+  <div class="nav-links">
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('profile') }}" class="nav-link">Profile</a>
+      <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+    {% else %}
+      <a href="{{ url_for('login') }}" class="nav-link">Login</a>
+      <a href="{{ url_for('signup') }}" class="nav-btn">Sign Up</a>
+    {% endif %}
+  </div>
+</nav>
+
+<div id="stars"></div>
+<div id="notes"></div>
+<div class="ambient"></div>
+
+<!-- WEATHER BANNER -->
+<div class="weather-banner" id="weatherBanner">
+  <span id="wIcon">🌤️</span>
+  <span id="wText">Detecting weather...</span>
+  <a class="weather-suggest" id="wSuggest" href="#">Try this mood →</a>
+</div>
+
+<!-- TIME GREETING -->
+<p class="time-greeting" id="timeGreet"></p>
+
+<!-- EYES -->
+<div class="eyes">
+  <div class="eye"><div class="pupil" id="p1"></div></div>
+  <div class="eye"><div class="pupil" id="p2"></div></div>
+</div>
+
+<h1 class="main-title">🎧 Mood Music</h1>
+<p class="subtitle">what are you feeling right now?</p>
+
+<!-- SEARCH -->
+<div class="search-wrap">
+  <span class="search-icon">🔍</span>
+  <input class="search-box" id="searchBox" type="text" placeholder="Search a mood..." autocomplete="off">
+</div>
+<p class="no-results" id="noResults">No mood found — try another word!</p>
+
+<!-- SURPRISE -->
+<div class="surprise-wrap">
+  <button class="surprise-btn" id="surpriseBtn">🎲 Surprise Me</button>
+</div>
+
+<!-- ─── EVERYDAY MOODS ─────────────────────── -->
+<p class="section-title"><span>Everyday Moods</span></p>
+<div class="mood-container" id="moodGrid">
+
+  <a href="/mood?type=happy" class="mood-btn happy" data-label="happy joyful cheerful fun">
+    <div class="waveform">
+      <div class="bar" style="--wd:.4s;--wdl:0s;--wh:18px"></div>
+      <div class="bar" style="--wd:.5s;--wdl:.1s;--wh:14px"></div>
+      <div class="bar" style="--wd:.35s;--wdl:.05s;--wh:20px"></div>
+      <div class="bar" style="--wd:.45s;--wdl:.15s;--wh:12px"></div>
+      <div class="bar" style="--wd:.55s;--wdl:.08s;--wh:16px"></div>
+    </div>
+    <span class="icon">😄</span><h3>Happy</h3>
+  </a>
+
+  <a href="/mood?type=sad" class="mood-btn sad" data-label="sad heartbreak cry emotional broken">
+    <div class="waveform">
+      <div class="bar" style="--wd:.7s;--wdl:0s;--wh:10px"></div>
+      <div class="bar" style="--wd:.9s;--wdl:.2s;--wh:14px"></div>
+      <div class="bar" style="--wd:.8s;--wdl:.1s;--wh:8px"></div>
+      <div class="bar" style="--wd:1s;--wdl:.3s;--wh:12px"></div>
+      <div class="bar" style="--wd:.75s;--wdl:.15s;--wh:6px"></div>
+    </div>
+    <span class="icon">😢</span><h3>Sad</h3>
+  </a>
+
+  <a href="/mood?type=chill" class="mood-btn chill" data-label="chill relax calm lofi peaceful">
+    <div class="waveform">
+      <div class="bar" style="--wd:.6s;--wdl:0s;--wh:12px"></div>
+      <div class="bar" style="--wd:.7s;--wdl:.12s;--wh:16px"></div>
+      <div class="bar" style="--wd:.65s;--wdl:.06s;--wh:10px"></div>
+      <div class="bar" style="--wd:.8s;--wdl:.18s;--wh:14px"></div>
+      <div class="bar" style="--wd:.55s;--wdl:.09s;--wh:12px"></div>
+    </div>
+    <span class="icon">😌</span><h3>Chill</h3>
+  </a>
+
+  <a href="/mood?type=angry" class="mood-btn angry" data-label="angry rage frustrated intense fire">
+    <div class="waveform">
+      <div class="bar" style="--wd:.25s;--wdl:0s;--wh:20px"></div>
+      <div class="bar" style="--wd:.3s;--wdl:.05s;--wh:16px"></div>
+      <div class="bar" style="--wd:.2s;--wdl:.02s;--wh:22px"></div>
+      <div class="bar" style="--wd:.28s;--wdl:.08s;--wh:18px"></div>
+      <div class="bar" style="--wd:.22s;--wdl:.04s;--wh:20px"></div>
+    </div>
+    <span class="icon">😤</span><h3>Angry</h3>
+  </a>
+
+  <a href="/mood?type=tired" class="mood-btn tired" data-label="tired sleepy exhausted night lofi">
+    <div class="waveform">
+      <div class="bar" style="--wd:.9s;--wdl:0s;--wh:8px"></div>
+      <div class="bar" style="--wd:1.1s;--wdl:.2s;--wh:10px"></div>
+      <div class="bar" style="--wd:1s;--wdl:.1s;--wh:6px"></div>
+      <div class="bar" style="--wd:1.2s;--wdl:.3s;--wh:8px"></div>
+      <div class="bar" style="--wd:.95s;--wdl:.15s;--wh:5px"></div>
+    </div>
+    <span class="icon">😴</span><h3>Tired</h3>
+  </a>
+
+  <a href="/mood?type=romantic" class="mood-btn romantic" data-label="romantic love date heart sweet">
+    <div class="waveform">
+      <div class="bar" style="--wd:.65s;--wdl:0s;--wh:13px"></div>
+      <div class="bar" style="--wd:.75s;--wdl:.12s;--wh:17px"></div>
+      <div class="bar" style="--wd:.7s;--wdl:.06s;--wh:11px"></div>
+      <div class="bar" style="--wd:.8s;--wdl:.18s;--wh:15px"></div>
+      <div class="bar" style="--wd:.6s;--wdl:.09s;--wh:13px"></div>
+    </div>
+    <span class="icon">💕</span><h3>Romantic</h3>
+  </a>
+
+  <a href="/mood?type=heartbreak" class="mood-btn heartbreak" data-label="heartbreak breakup hurt pain loss">
+    <div class="waveform">
+      <div class="bar" style="--wd:.8s;--wdl:0s;--wh:9px"></div>
+      <div class="bar" style="--wd:.95s;--wdl:.1s;--wh:14px"></div>
+      <div class="bar" style="--wd:.85s;--wdl:.05s;--wh:7px"></div>
+      <div class="bar" style="--wd:1s;--wdl:.18s;--wh:11px"></div>
+      <div class="bar" style="--wd:.9s;--wdl:.12s;--wh:5px"></div>
+    </div>
+    <span class="icon">💔</span><h3>Heartbreak</h3>
+  </a>
+
+  <a href="/mood?type=nostalgic" class="mood-btn nostalgic" data-label="nostalgic throwback memories old retro vintage">
+    <div class="waveform">
+      <div class="bar" style="--wd:.7s;--wdl:0s;--wh:12px"></div>
+      <div class="bar" style="--wd:.8s;--wdl:.1s;--wh:16px"></div>
+      <div class="bar" style="--wd:.75s;--wdl:.05s;--wh:10px"></div>
+      <div class="bar" style="--wd:.85s;--wdl:.15s;--wh:14px"></div>
+      <div class="bar" style="--wd:.65s;--wdl:.08s;--wh:12px"></div>
+    </div>
+    <span class="icon">🌅</span><h3>Nostalgic</h3>
+  </a>
+
+</div>
+
+<!-- ─── ENERGY & FOCUS ──────────────────────── -->
+<p class="section-title"><span>Energy & Focus</span></p>
+<div class="mood-container" id="moodGrid2">
+
+  <a href="/mood?type=focused" class="mood-btn focused" data-label="focused study concentrate work deep">
+    <div class="waveform">
+      <div class="bar" style="--wd:.5s;--wdl:0s;--wh:14px"></div>
+      <div class="bar" style="--wd:.5s;--wdl:.1s;--wh:14px"></div>
+      <div class="bar" style="--wd:.5s;--wdl:.05s;--wh:14px"></div>
+      <div class="bar" style="--wd:.5s;--wdl:.15s;--wh:14px"></div>
+      <div class="bar" style="--wd:.5s;--wdl:.08s;--wh:14px"></div>
+    </div>
+    <span class="icon">📚</span><h3>Focused</h3>
+  </a>
+
+  <a href="/mood?type=motivated" class="mood-btn motivated" data-label="motivated gym workout hustle energy power">
+    <div class="waveform">
+      <div class="bar" style="--wd:.3s;--wdl:0s;--wh:22px"></div>
+      <div class="bar" style="--wd:.35s;--wdl:.06s;--wh:18px"></div>
+      <div class="bar" style="--wd:.28s;--wdl:.03s;--wh:20px"></div>
+      <div class="bar" style="--wd:.32s;--wdl:.09s;--wh:16px"></div>
+      <div class="bar" style="--wd:.3s;--wdl:.05s;--wh:22px"></div>
+    </div>
+    <span class="icon">💪</span><h3>Motivated</h3>
+  </a>
+
+  <a href="/mood?type=workout" class="mood-btn workout" data-label="workout gym fitness run energy cardio">
+    <div class="waveform">
+      <div class="bar" style="--wd:.22s;--wdl:0s;--wh:22px"></div>
+      <div class="bar" style="--wd:.28s;--wdl:.04s;--wh:18px"></div>
+      <div class="bar" style="--wd:.2s;--wdl:.02s;--wh:24px"></div>
+      <div class="bar" style="--wd:.26s;--wdl:.06s;--wh:16px"></div>
+      <div class="bar" style="--wd:.24s;--wdl:.03s;--wh:22px"></div>
+    </div>
+    <span class="icon">🏋️</span><h3>Workout</h3>
+  </a>
+
+  <a href="/mood?type=party" class="mood-btn party" data-label="party dance celebration fun energy">
+    <div class="waveform">
+      <div class="bar" style="--wd:.3s;--wdl:0s;--wh:20px"></div>
+      <div class="bar" style="--wd:.4s;--wdl:.07s;--wh:16px"></div>
+      <div class="bar" style="--wd:.25s;--wdl:.03s;--wh:22px"></div>
+      <div class="bar" style="--wd:.35s;--wdl:.1s;--wh:18px"></div>
+      <div class="bar" style="--wd:.3s;--wdl:.05s;--wh:20px"></div>
+    </div>
+    <span class="icon">🎉</span><h3>Party</h3>
+  </a>
+
+</div>
+
+<!-- ─── VIBES & SPECIALS ──────────────────────── -->
+<p class="section-title"><span>Vibes & Specials</span></p>
+<div class="mood-container" id="moodGrid3">
+
+  <a href="/mood?type=rainy" class="mood-btn rainy" data-label="rainy rain monsoon weather cozy indoor">
+    <div class="waveform">
+      <div class="bar" style="--wd:.75s;--wdl:0s;--wh:9px"></div>
+      <div class="bar" style="--wd:.9s;--wdl:.15s;--wh:13px"></div>
+      <div class="bar" style="--wd:.8s;--wdl:.07s;--wh:7px"></div>
+      <div class="bar" style="--wd:.95s;--wdl:.22s;--wh:11px"></div>
+      <div class="bar" style="--wd:.85s;--wdl:.1s;--wh:9px"></div>
+    </div>
+    <span class="icon">🌧️</span><h3>Rainy Day</h3>
+  </a>
+
+  <a href="/mood?type=latenight" class="mood-btn latenight" data-label="late night midnight dark vibe moon silent">
+    <div class="waveform">
+      <div class="bar" style="--wd:.85s;--wdl:0s;--wh:8px"></div>
+      <div class="bar" style="--wd:1s;--wdl:.18s;--wh:12px"></div>
+      <div class="bar" style="--wd:.9s;--wdl:.08s;--wh:6px"></div>
+      <div class="bar" style="--wd:1.1s;--wdl:.28s;--wh:10px"></div>
+      <div class="bar" style="--wd:.95s;--wdl:.14s;--wh:8px"></div>
+    </div>
+    <span class="icon">🌙</span><h3>Late Night</h3>
+  </a>
+
+  <a href="/mood?type=devotional" class="mood-btn devotional" data-label="devotional bhajan spiritual prayer god worship">
+    <div class="waveform">
+      <div class="bar" style="--wd:.6s;--wdl:0s;--wh:14px"></div>
+      <div class="bar" style="--wd:.7s;--wdl:.1s;--wh:18px"></div>
+      <div class="bar" style="--wd:.65s;--wdl:.05s;--wh:14px"></div>
+      <div class="bar" style="--wd:.7s;--wdl:.15s;--wh:18px"></div>
+      <div class="bar" style="--wd:.6s;--wdl:.08s;--wh:14px"></div>
+    </div>
+    <span class="icon">🙏</span><h3>Devotional</h3>
+  </a>
+
+</div>
+
+<!-- MOOD TRACKER -->
+<div class="tracker-section">
+  <p class="tracker-title">📊 Your Mood This Week <span class="streak-badge" id="streakBadge" style="display:none"></span></p>
+  <div class="chart-wrap">
+    <div class="chart-bars" id="chartBars"></div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <p>Powered by <strong>Efficient Antigravity</strong></p>
+  <p class="credits">Glassmorphism UI • Production Ready</p>
+</footer>
+
+<script>
+// ── STARS ─────────────────────────────────
+const se=document.getElementById('stars');
+for(let i=0;i<70;i++){const s=document.createElement('div');s.className='star';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*5}s;--dl:${Math.random()*6}s;--op:${.1+Math.random()*.5}`;se.appendChild(s);}
+
+// ── FLOATING NOTES ────────────────────────
+const noteEmojis=['🎵','🎶','🎼','♪','♫','🎸','🎹','🎺','🎻'];
+const ne=document.getElementById('notes');
+for(let i=0;i<18;i++){
+  const n=document.createElement('div');n.className='fnote';
+  n.textContent=noteEmojis[Math.floor(Math.random()*noteEmojis.length)];
+  n.style.cssText=`left:${Math.random()*100}%;--fd:${6+Math.random()*10}s;--fdl:${Math.random()*10}s`;
+  ne.appendChild(n);
+}
+
+// ── EYE TRACKING ──────────────────────────
+const pupils=[document.getElementById('p1'),document.getElementById('p2')];
+document.addEventListener('mousemove',e=>{
+  pupils.forEach(p=>{
+    const r=p.parentElement.getBoundingClientRect();
+    const ex=r.left+r.width/2,ey=r.top+r.height/2;
+    const a=Math.atan2(e.clientY-ey,e.clientX-ex);
+    const d=Math.min(9,Math.hypot(e.clientX-ex,e.clientY-ey)/5);
+    p.style.transform=`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px)`;
+  });
+});
+
+// ── TIME GREETING ─────────────────────────
+const h=new Date().getHours();
+const greets=[[5,12,'Good morning ☀️ — start your day right'],[12,17,"Good afternoon 🌤️ — what's the vibe?"],[17,21,'Good evening 🌇 — time to unwind'],[21,24,'Late night 🌙 — chill or stay up?'],[0,5,'Still awake? 🌌 — night owl mode']];
+for(const[s,e,msg] of greets){if(h>=s&&h<e){document.getElementById('timeGreet').textContent=msg;break;}}
+
+// ── WEATHER ───────────────────────────────
+const wMap={sunny:{mood:'happy',icon:'☀️',text:'Sunny & bright!'},clear:{mood:'happy',icon:'☀️',text:'Clear skies!'},cloud:{mood:'chill',icon:'☁️',text:'Cloudy outside.'},overcast:{mood:'chill',icon:'🌥️',text:'Overcast skies.'},rain:{mood:'rainy',icon:'🌧️',text:'Rainy day.'},drizzle:{mood:'rainy',icon:'🌦️',text:'Light drizzle.'},thunder:{mood:'angry',icon:'⛈️',text:'Storm incoming!'},snow:{mood:'romantic',icon:'❄️',text:"It's snowing!"},mist:{mood:'tired',icon:'🌫️',text:'Misty outside.'},fog:{mood:'latenight',icon:'🌫️',text:'Foggy skies.'},haze:{mood:'tired',icon:'🌫️',text:'Hazy weather.'}};
+if(navigator.geolocation){
+  navigator.geolocation.getCurrentPosition(pos=>{
+    fetch(`https://wttr.in/${pos.coords.latitude},${pos.coords.longitude}?format=j1`)
+    .then(r=>r.json()).then(d=>{
+      const desc=d.current_condition[0].weatherDesc[0].value.toLowerCase();
+      const temp=d.current_condition[0].temp_C;
+      let match={mood:'chill',icon:'🌤️',text:'Nice weather.'};
+      for(const[k,v] of Object.entries(wMap)){if(desc.includes(k)){match=v;break;}}
+      document.getElementById('wIcon').textContent=match.icon;
+      document.getElementById('wText').textContent=`${match.text} ${temp}°C`;
+      document.getElementById('wSuggest').href=`/mood?type=${match.mood}`;
+      document.getElementById('wSuggest').textContent=`Try ${match.mood} →`;
+      document.getElementById('weatherBanner').classList.add('show');
+    }).catch(()=>{});
+  },()=>{});
+}
+
+// ── SEARCH ────────────────────────────────
+const sb=document.getElementById('searchBox');
+const cards=document.querySelectorAll('.mood-btn');
+const nr=document.getElementById('noResults');
+sb.addEventListener('input',()=>{
+  const q=sb.value.toLowerCase().trim();
+  let found=0;
+  cards.forEach(c=>{const ok=!q||c.dataset.label.includes(q);c.classList.toggle('hidden',!ok);if(ok)found++;});
+  nr.style.display=found===0?'block':'none';
+});
+
+// ── SURPRISE ME ───────────────────────────
+const allMoods=['happy','sad','chill','angry','tired','romantic','heartbreak','nostalgic','focused','motivated','workout','party','rainy','latenight','devotional'];
+document.getElementById('surpriseBtn').addEventListener('click',()=>{
+  const pick=allMoods[Math.floor(Math.random()*allMoods.length)];
+  window.location.href=`/mood?type=${pick}`;
+});
+
+// ── PARTICLE BURST ────────────────────────
+function burst(x,y,color){
+  for(let i=0;i<10;i++){
+    const p=document.createElement('div');p.className='particle';
+    const angle=Math.random()*Math.PI*2;const dist=40+Math.random()*60;
+    p.style.cssText=`left:${x}px;top:${y}px;background:${color};--tx:${Math.cos(angle)*dist}px;--ty:${Math.sin(angle)*dist}px`;
+    document.body.appendChild(p);
+    setTimeout(()=>p.remove(),800);
+  }
+}
+const colorMap={happy:'#fbbf24',sad:'#60a5fa',chill:'#34d399',angry:'#f87171',tired:'#818cf8',romantic:'#f472b4',heartbreak:'#ef4444',nostalgic:'#eab308',focused:'#a78bfa',motivated:'#4ade80',workout:'#22d3ee',party:'#fb923c',rainy:'#93c5fd',latenight:'#8b5cf6',devotional:'#fb923c'};
+cards.forEach(c=>{
+  c.addEventListener('click',e=>{
+    const rect=c.getBoundingClientRect();
+    const mood=c.dataset.label.split(' ')[0];
+    burst(rect.left+rect.width/2,rect.top+rect.height/2,colorMap[mood]||'#a78bfa');
+    const hist=getHistory();hist[mood]=(hist[mood]||0)+1;
+    localStorage.setItem('moodHistory',JSON.stringify(hist));
+  });
+});
+
+// ── MOOD TRACKER ──────────────────────────
+const moodColors={happy:'#fbbf24',sad:'#60a5fa',chill:'#34d399',angry:'#f87171',tired:'#818cf8',focused:'#a78bfa',party:'#fb923c',romantic:'#f472b4',motivated:'#4ade80',workout:'#22d3ee',heartbreak:'#ef4444',nostalgic:'#eab308',rainy:'#93c5fd',latenight:'#8b5cf6',devotional:'#fb923c'};
+function getHistory(){try{return JSON.parse(localStorage.getItem('moodHistory')||'{}');}catch{return {};}}
+function calcStreak(hist){
+  const total=Object.values(hist).reduce((a,b)=>a+b,0);
+  return total>0?Math.min(total,7):0;
+}
+function renderChart(){
+  const hist=getHistory();
+  const el=document.getElementById('chartBars');el.innerHTML='';
+  const moods=Object.keys(moodColors);
+  const max=Math.max(1,...moods.map(m=>hist[m]||0));
+  let hasData=false;
+  moods.forEach(mood=>{
+    const cnt=hist[mood]||0;if(cnt>0)hasData=true;
+    const pct=Math.round((cnt/max)*88);
+    const w=document.createElement('div');w.className='chart-bar-wrap';
+    w.innerHTML=`<span class="chart-count">${cnt||''}</span><div class="chart-bar" style="height:${Math.max(4,pct)}px;background:${moodColors[mood]}33;border-top:2px solid ${moodColors[mood]}" title="${mood}: ${cnt}x"></div><span class="chart-label">${mood.slice(0,4)}</span>`;
+    el.appendChild(w);
+  });
+  if(!hasData)el.innerHTML='<p class="tracker-empty">Pick a mood to start tracking! 🎯</p>';
+  const streak=calcStreak(getHistory());
+  const sb2=document.getElementById('streakBadge');
+  if(streak>0){sb2.textContent=`🔥 ${streak} day${streak>1?'s':''} streak`;sb2.style.display='inline-flex';}
+}
+renderChart();
+</script>
+</body>
+</html>

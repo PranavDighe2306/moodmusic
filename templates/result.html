@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>{{ mood|capitalize }} Songs 🎶</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div id="stars"></div>
+<div id="notes"></div>
+<div class="ambient"></div>
+
+<div class="result-wrap">
+
+  <!-- EYES -->
+  <div class="eyes">
+    <div class="eye"><div class="pupil" id="p1"></div></div>
+    <div class="eye"><div class="pupil" id="p2"></div></div>
+  </div>
+
+  <!-- HEADER -->
+  <div class="result-header">
+    <h1>{{ mood }} Songs 🎶</h1>
+    <p class="result-sub">choose your language &amp; hit play</p>
+    <div class="quote-card">{{ quote }}</div>
+  </div>
+
+  <!-- 6 LANGUAGE CARDS -->
+  <div class="lang-grid">
+
+    <!-- BOLLYWOOD -->
+    <div class="lang-card lang-bollywood">
+      <div class="lang-header">
+        <div class="lang-flag-name">
+          <span class="lang-flag">🇮🇳</span>
+          <span class="lang-name">Bollywood</span>
+        </div>
+        <span class="lang-badge">Hindi</span>
+      </div>
+      <div class="vinyl-wrap">
+        <div class="vinyl"></div>
+        <div class="eq-mini">
+          <div class="bar" style="--wd:.4s;--wdl:0s;--wh:16px"></div>
+          <div class="bar" style="--wd:.5s;--wdl:.08s;--wh:10px"></div>
+          <div class="bar" style="--wd:.35s;--wdl:.04s;--wh:18px"></div>
+          <div class="bar" style="--wd:.45s;--wdl:.12s;--wh:8px"></div>
+          <div class="bar" style="--wd:.55s;--wdl:.06s;--wh:14px"></div>
+          <div class="bar" style="--wd:.4s;--wdl:.02s;--wh:12px"></div>
+          <div class="bar" style="--wd:.6s;--wdl:.1s;--wh:16px"></div>
+        </div>
+      </div>
+      <iframe src="{{ langs.bollywood }}" height="352"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"></iframe>
+    </div>
+
+    <!-- HOLLYWOOD -->
+    <div class="lang-card lang-hollywood">
+      <div class="lang-header">
+        <div class="lang-flag-name">
+          <span class="lang-flag">🇺🇸</span>
+          <span class="lang-name">Hollywood</span>
+        </div>
+        <span class="lang-badge">English</span>
+      </div>
+      <div class="vinyl-wrap">
+        <div class="vinyl"></div>
+        <div class="eq-mini">
+          <div class="bar" style="--wd:.38s;--wdl:0s;--wh:14px"></div>
+          <div class="bar" style="--wd:.48s;--wdl:.06s;--wh:18px"></div>
+          <div class="bar" style="--wd:.33s;--wdl:.03s;--wh:10px"></div>
+          <div class="bar" style="--wd:.43s;--wdl:.1s;--wh:16px"></div>
+          <div class="bar" style="--wd:.53s;--wdl:.05s;--wh:12px"></div>
+          <div class="bar" style="--wd:.4s;--wdl:.08s;--wh:18px"></div>
+          <div class="bar" style="--wd:.58s;--wdl:.02s;--wh:8px"></div>
+        </div>
+      </div>
+      <iframe src="{{ langs.hollywood }}" height="352"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"></iframe>
+    </div>
+
+    <!-- MARATHI -->
+    <div class="lang-card lang-marathi">
+      <div class="lang-header">
+        <div class="lang-flag-name">
+          <span class="lang-flag">🟠</span>
+          <span class="lang-name">Marathi</span>
+        </div>
+        <span class="lang-badge">मराठी</span>
+      </div>
+      <div class="vinyl-wrap">
+        <div class="vinyl"></div>
+        <div class="eq-mini">
+          <div class="bar" style="--wd:.5s;--wdl:0s;--wh:12px"></div>
+          <div class="bar" style="--wd:.6s;--wdl:.1s;--wh:16px"></div>
+          <div class="bar" style="--wd:.45s;--wdl:.05s;--wh:8px"></div>
+          <div class="bar" style="--wd:.55s;--wdl:.15s;--wh:14px"></div>
+          <div class="bar" style="--wd:.65s;--wdl:.08s;--wh:10px"></div>
+          <div class="bar" style="--wd:.5s;--wdl:.03s;--wh:16px"></div>
+          <div class="bar" style="--wd:.7s;--wdl:.12s;--wh:12px"></div>
+        </div>
+      </div>
+      <iframe src="{{ langs.marathi }}" height="352"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"></iframe>
+    </div>
+
+    <!-- TAMIL -->
+    <div class="lang-card lang-tamil">
+      <div class="lang-header">
+        <div class="lang-flag-name">
+          <span class="lang-flag">🟦</span>
+          <span class="lang-name">Tamil</span>
+        </div>
+        <span class="lang-badge">தமிழ்</span>
+      </div>
+      <div class="vinyl-wrap">
+        <div class="vinyl"></div>
+        <div class="eq-mini">
+          <div class="bar" style="--wd:.42s;--wdl:0s;--wh:18px"></div>
+          <div class="bar" style="--wd:.52s;--wdl:.07s;--wh:10px"></div>
+          <div class="bar" style="--wd:.37s;--wdl:.03s;--wh:14px"></div>
+          <div class="bar" style="--wd:.47s;--wdl:.11s;--wh:8px"></div>
+          <div class="bar" style="--wd:.57s;--wdl:.05s;--wh:16px"></div>
+          <div class="bar" style="--wd:.44s;--wdl:.09s;--wh:12px"></div>
+          <div class="bar" style="--wd:.62s;--wdl:.02s;--wh:18px"></div>
+        </div>
+      </div>
+      <iframe src="{{ langs.tamil }}" height="352"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"></iframe>
+    </div>
+
+    <!-- KANNADA -->
+    <div class="lang-card lang-kannada">
+      <div class="lang-header">
+        <div class="lang-flag-name">
+          <span class="lang-flag">🔴</span>
+          <span class="lang-name">Kannada</span>
+        </div>
+        <span class="lang-badge">ಕನ್ನಡ</span>
+      </div>
+      <div class="vinyl-wrap">
+        <div class="vinyl"></div>
+        <div class="eq-mini">
+          <div class="bar" style="--wd:.36s;--wdl:0s;--wh:10px"></div>
+          <div class="bar" style="--wd:.46s;--wdl:.08s;--wh:16px"></div>
+          <div class="bar" style="--wd:.32s;--wdl:.04s;--wh:14px"></div>
+          <div class="bar" style="--wd:.42s;--wdl:.12s;--wh:8px"></div>
+          <div class="bar" style="--wd:.54s;--wdl:.06s;--wh:18px"></div>
+          <div class="bar" style="--wd:.38s;--wdl:.02s;--wh:12px"></div>
+          <div class="bar" style="--wd:.5s;--wdl:.1s;--wh:10px"></div>
+        </div>
+      </div>
+      <iframe src="{{ langs.kannada }}" height="352"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"></iframe>
+    </div>
+
+    <!-- MALAYALAM -->
+    <div class="lang-card lang-malayalam">
+      <div class="lang-header">
+        <div class="lang-flag-name">
+          <span class="lang-flag">🟢</span>
+          <span class="lang-name">Malayalam</span>
+        </div>
+        <span class="lang-badge">മലയാളം</span>
+      </div>
+      <div class="vinyl-wrap">
+        <div class="vinyl"></div>
+        <div class="eq-mini">
+          <div class="bar" style="--wd:.44s;--wdl:0s;--wh:14px"></div>
+          <div class="bar" style="--wd:.54s;--wdl:.09s;--wh:10px"></div>
+          <div class="bar" style="--wd:.39s;--wdl:.04s;--wh:18px"></div>
+          <div class="bar" style="--wd:.49s;--wdl:.13s;--wh:8px"></div>
+          <div class="bar" style="--wd:.59s;--wdl:.06s;--wh:14px"></div>
+          <div class="bar" style="--wd:.46s;--wdl:.08s;--wh:16px"></div>
+          <div class="bar" style="--wd:.64s;--wdl:.02s;--wh:10px"></div>
+        </div>
+      </div>
+      <iframe src="{{ langs.malayalam }}" height="352"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"></iframe>
+    </div>
+
+  </div>
+
+  <!-- SHARE STRIP -->
+  <div class="share-strip">
+    <span class="share-label">Share this vibe</span>
+    <a class="share-chip" id="copyLink" href="#">🔗 Copy Link</a>
+    <a class="share-chip" href="https://twitter.com/intent/tweet?text=I'm feeling {{ mood }} — check out these playlists! 🎧" target="_blank">𝕏 Tweet</a>
+  </div>
+
+  <div style="text-align:center">
+    <a href="/" class="back-btn">← Choose another mood</a>
+  </div>
+
+</div>
+
+<script>
+// STARS
+const se=document.getElementById('stars');
+for(let i=0;i<65;i++){const s=document.createElement('div');s.className='star';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*5}s;--dl:${Math.random()*6}s;--op:${.1+Math.random()*.45}`;se.appendChild(s);}
+
+// FLOATING NOTES
+const noteEmojis=['🎵','🎶','🎼','♪','♫'];
+const ne=document.getElementById('notes');
+for(let i=0;i<14;i++){
+  const n=document.createElement('div');n.className='fnote';
+  n.textContent=noteEmojis[Math.floor(Math.random()*noteEmojis.length)];
+  n.style.cssText=`left:${Math.random()*100}%;--fd:${7+Math.random()*9}s;--fdl:${Math.random()*8}s`;
+  ne.appendChild(n);
+}
+
+// EYE TRACKING
+const pupils=[document.getElementById('p1'),document.getElementById('p2')];
+document.addEventListener('mousemove',e=>{
+  pupils.forEach(p=>{
+    const r=p.parentElement.getBoundingClientRect();
+    const ex=r.left+r.width/2,ey=r.top+r.height/2;
+    const a=Math.atan2(e.clientY-ey,e.clientX-ex);
+    const d=Math.min(9,Math.hypot(e.clientX-ex,e.clientY-ey)/5);
+    p.style.transform=`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px)`;
+  });
+});
+
+// COPY LINK
+document.getElementById('copyLink').addEventListener('click',e=>{
+  e.preventDefault();
+  navigator.clipboard.writeText(window.location.href).then(()=>{
+    e.target.textContent='✅ Copied!';
+    setTimeout(()=>{e.target.textContent='🔗 Copy Link';},2000);
+  });
+});
+</script>
+</body>
+</html>
