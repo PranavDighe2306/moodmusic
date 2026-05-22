@@ -7,6 +7,8 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 from flask_bcrypt import Bcrypt
 import csv
 from models import db, User, MoodHistory
+from flask_mail import Mail, Message
+import random
 
 app = Flask(__name__)
 
@@ -17,9 +19,18 @@ if db_uri and db_uri.startswith("postgres://"):
     db_uri = db_uri.replace("postgres://", "postgresql://", 1)
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'your_email@gmail.com'
+app.config['MAIL_PASSWORD'] = 'your_app_password'
+app.config['MAIL_PASSWORD']
 
 db.init_app(app)
 bcrypt = Bcrypt(app)
+
+mail = Mail(app)
 
 login_manager = LoginManager()
 login_manager.login_view = 'login'
@@ -44,6 +55,8 @@ def load_songs():
                 }
             data[mood]['langs'][row['language']] = row['playlist']
     return data
+def generate_otp():
+    return str(random.randint(100000, 999999))
 
 @app.route('/')
 def home():
@@ -51,40 +64,120 @@ def home():
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
+
     if current_user.is_authenticated:
         return redirect(url_for('home'))
+
     if request.method == 'POST':
+
         name = request.form.get('name')
         email = request.form.get('email')
         password = request.form.get('password')
-        
-        user = User.query.filter_by(email=email).first()
-        if user:
+
+        existing_user = User.query.filter_by(email=email).first()
+
+        if existing_user:
             flash('Email already exists.', 'danger')
             return redirect(url_for('signup'))
-            
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        new_user = User(name=name, email=email, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('Account created! Please log in.', 'success')
-        return redirect(url_for('login'))
-        
+
+        otp = generate_otp()
+
+        session['signup_data'] = {
+            'name': name,
+            'email': email,
+            'password': bcrypt.generate_password_hash(password).decode('utf-8')
+        }
+
+        session['otp'] = otp
+
+        try:
+            msg = Message(
+                'MoodMusicz Email Verification',
+                sender=app.config['MAIL_USERNAME'],
+                recipients=[email]
+            )
+
+            msg.body = f'''
+Hello {name},
+
+Your OTP for MoodMusicz account verification is:
+
+{otp}
+
+This OTP is valid for a few minutes.
+
+Thank you!
+MoodMusicz Team
+'''
+
+            mail.send(msg)
+
+            flash('OTP sent to your email.', 'success')
+            return redirect(url_for('verify_otp'))
+
+        except Exception as e:
+            print(e)
+            flash('Failed to send OTP email.', 'danger')
+
     return render_template('signup.html')
+@app.route('/verify_otp', methods=['GET', 'POST'])
+def verify_otp():
+
+    if request.method == 'POST':
+
+        entered_otp = request.form.get('otp')
+        real_otp = session.get('otp')
+
+        if entered_otp == real_otp:
+
+            signup_data = session.get('signup_data')
+
+            new_user = User(
+                name=signup_data['name'],
+                email=signup_data['email'],
+                password=signup_data['password'],
+                is_verified=True
+            )
+
+            db.session.add(new_user)
+            db.session.commit()
+
+            session.pop('otp', None)
+            session.pop('signup_data', None)
+
+            flash('Account verified successfully!', 'success')
+
+            return redirect(url_for('login'))
+
+        else:
+            flash('Invalid OTP.', 'danger')
+
+    return render_template('verify_otp.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+
     if current_user.is_authenticated:
         return redirect(url_for('home'))
+
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+
         user = User.query.filter_by(email=email).first()
+
         if user and user.password and bcrypt.check_password_hash(user.password, password):
+
+            if not user.is_verified:
+                flash('Please verify your email first.', 'warning')
+                return redirect(url_for('login'))
+
             login_user(user)
             return redirect(url_for('home'))
+
         else:
             flash('Login unsuccessful. Check email and password.', 'danger')
+
     return render_template('login.html')
 
 @app.route('/auth/google')
