@@ -1,6 +1,8 @@
+from authlib.integrations.flask_client import OAuth
 import os
 from dotenv import load_dotenv
 load_dotenv()
+
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
@@ -11,6 +13,19 @@ from flask_mail import Mail, Message
 import random
 
 app = Flask(__name__)
+app.config['GOOGLE_CLIENT_ID'] = 'your-client-id'
+app.config['GOOGLE_CLIENT_SECRET'] = 'your-client-secret'
+oauth = OAuth(app)
+
+google = oauth.register(
+    name='google',
+    client_id=app.config['GOOGLE_CLIENT_ID'],
+    client_secret=app.config['GOOGLE_CLIENT_SECRET'],
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+    client_kwargs={
+        'scope': 'openid email profile'
+    }
+)
 
 # Deployment configurations via environment variables
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'super-secret-antigravity-key')
@@ -182,31 +197,33 @@ def login():
 
 @app.route('/auth/google')
 def auth_google():
-    return render_template('google_login.html')
+    redirect_uri = url_for('google_callback', _external=True)
+    return google.authorize_redirect(redirect_uri)
 
 @app.route('/auth/google/callback', methods=['POST'])
-def auth_google_callback():
-    data = request.get_json() or {}
-    email = data.get('email')
-    name = data.get('name')
-    
-    if not email:
-        return jsonify({'error': 'Email is required'}), 400
-        
-    if not name:
-        name = email.split('@')[0].capitalize()
-        
+@app.route('/auth/google/callback')
+def google_callback():
+    token = google.authorize_access_token()
+    user_info = token['userinfo']
+
+    email = user_info['email']
+    name = user_info['name']
+
     user = User.query.filter_by(email=email).first()
+
     if not user:
-        user = User(name=name, email=email, password=None, google_id='google_' + email.split('@')[0])
+        user = User(
+            name=name,
+            email=email,
+            password=None,
+            is_verified=True
+        )
         db.session.add(user)
         db.session.commit()
-    elif not user.google_id:
-        user.google_id = 'google_' + email.split('@')[0]
-        db.session.commit()
-        
+
     login_user(user)
-    return jsonify({'success': True, 'redirect': url_for('home')})
+
+    return redirect(url_for('home'))
 
 @app.route('/logout')
 @login_required
